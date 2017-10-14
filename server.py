@@ -1,11 +1,12 @@
 import random
 import time
-from flask import Flask, request, jsonify,json
+from flask import Flask, jsonify
 
 ########################################################################################################################
 # AQUÍ INICIALIZAMOS LAS VARIBLES Y EL APP.
 
 app = Flask(__name__)
+
 vectorPartida = []
 vectorRespuesta = []
 cantidadDeClientes = 0
@@ -19,22 +20,22 @@ contadorJugador2 = 0
 ########################################################################################################################
 # AQUÍ SERÁ DONDE ALMACENAREMOS LOS HISTÓRICOS DE CADA JUGADOR (1 Y ) Y EL GLOBAL DE COMO QUEDÓ LA PARTIDA.
 
-Resultado= [
+Resultado = [
     {
         'tipo': 'jugador1',
         'registro': ''
 
-    },{
+    }, {
         'tipo': 'jugador2',
         'registro': ''
-    },{
+    }, {
         'tipo': 'historico',
         'registro': ''
     }
 ]
 
 ########################################################################################################################
-#LAS RUTAS DONDE NOS SERVIRÁ PARA EMPEZAR EL PARTIDO, Y PARA BUSCAR LOS HISTÓRICOS DE JUGADOR 1, 2 Y EL GLOBAL.
+# LAS RUTAS DONDE NOS SERVIRÁ PARA EMPEZAR EL PARTIDO, Y PARA BUSCAR LOS HISTÓRICOS DE JUGADOR 1, 2 Y EL GLOBAL.
 
 @app.route('/pingpong/api/start/<string:tipo_de_resultado>', methods = ['GET'])
 def get_data(tipo_de_resultado):
@@ -65,22 +66,21 @@ def juego():
     global contadorJugador2
     jugador1 = [tipo for tipo in Resultado if tipo['tipo'] == 'jugador1']
     jugador2 = [tipo for tipo in Resultado if tipo['tipo'] == 'jugador2']
-    historico =[tipo for tipo in Resultado if tipo['tipo'] == 'historico']
+    historico = [tipo for tipo in Resultado if tipo['tipo'] == 'historico']
 
     print('¡¡¡¡¡COMENZÓ EL JUEGO!!!!!')
-    for puntoContador in range(0,3):
-        punto = random.randint(0,1)
+    for puntoContador in range(0, 3):
         print('---------------------------------------------------------------------')
         time.sleep(1)
         continuar_jugador1("PUNTO NUMERO = " + str(puntoContador+1) + ", ")
 
-        lanzamientoJugador1 = random.randint(0,1)
+        lanzamientoJugador1 = random.randint(0, 1)
         if lanzamientoJugador1 == 0:
             continuar_jugador1("EL JUGADOR 1 lanzo al lado izquierdo, ")
         else:
             continuar_jugador1("EL JUGADOR 1 lanzo al lado derecho, ")
 
-        recepcionJugador2 = random.randint(0,1)
+        recepcionJugador2 = random.randint(0, 1)
         if recepcionJugador2 == 0:
             continuar_jugador2("EL JUGADOR 2 recibe por el lado izquierdo, ")
         else:
@@ -129,16 +129,12 @@ def sigueEnJuego(punto):
     else:
         sigueEnJuego(punto)
 
-def imprima(descripcion):
-        return jsonify(descripcion)
-
 def continuar_jugador1(descripcion):
     global vectorRespuesta
     global jugador1
     global historico
     vectorRespuesta.append(descripcion)
     print(descripcion)
-    imprima(descripcion)
     jugador1[0]['registro'] += descripcion
     historico[0]['registro'] += descripcion
     time.sleep(0.3)
@@ -149,7 +145,6 @@ def continuar_jugador2(descripcion):
     global historico
     vectorRespuesta.append(descripcion)
     print(descripcion)
-    imprima(descripcion)
     jugador2[0]['registro'] += descripcion
     historico[0]['registro'] += descripcion
     time.sleep(0.3)
@@ -160,7 +155,7 @@ def imprimaYEnvie():
 
 
 ########################################################################################################################
-#CORRER NUESTRO SERVER.
+# CORRER NUESTRO SERVER.
 if __name__ == "__main__":
     app.run(debug=True)
-    app.run(host="0.0.0.0", port = 5000)
+    app.run(host="0.0.0.0", port=5000)
